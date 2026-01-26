@@ -33,12 +33,15 @@
 
     <script>
         async function loadData() {
-            const response = await fetch('data.json');
-            const history = await response.json();
-            const latest = history[history.length - 1];
-            const players = ["Player 1", "Player 2", "Player 3"];
+    const response = await fetch('data.json');
+    const history = await response.json();
+    const latest = history[history.length - 1];
+    
+    // Dynamically get names from the JSON instead of hardcoding "Player 1"
+    const players = Object.keys(latest.players); 
 
-            const container = document.getElementById('player-rows');
+    const container = document.getElementById('player-rows');
+    container.innerHTML = ''; // Clear previous content
             players.forEach(p => {
                 const pData = latest.players[p];
                 const trend = history.map(h => h.players[p].total);
@@ -59,6 +62,15 @@
             window.fullData = latest;
             showTab('all');
         }
+
+        const tabContainer = document.getElementById('tabs');
+    tabContainer.innerHTML = `<button onclick="showTab('all')" class="px-4 py-2 hover:bg-gray-700">All</button>`;
+    players.forEach(p => {
+        tabContainer.innerHTML += `<button onclick="showTab('${p}')" class="px-4 py-2 hover:bg-gray-700">${p}</button>`;
+    });
+
+    window.fullData = latest;
+    showTab('all');
 
         function renderChart(id, data, isPositive) {
             new Chart(document.getElementById(id), {
