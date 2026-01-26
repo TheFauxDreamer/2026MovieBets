@@ -30,5 +30,49 @@
         }
       }
     }
+  },
+  {
+    "date": "2026-01-26 04:04",
+    "players": {
+      "Ethan": {
+        "total": 0,
+        "bomb": 0,
+        "movies": {
+          "The Super Mario Galaxy Movie": 0,
+          "Cold Storage": 0,
+          "GOAT": 0,
+          "Iron Lung": 0,
+          "You, Me & Tuscany": 0,
+          "The Moment": 0,
+          "Shelter": 0
+        }
+      },
+      "Paul": {
+        "total": 0,
+        "bomb": 0,
+        "movies": {
+          "Spider-Man: Brand New Day": 0,
+          "Project Hail Mary": 0,
+          "Ready or Not 2: Here I Come": 0,
+          "Wuthering Heights": 0,
+          "Reminders of Him": 0,
+          "The Undertone": 0,
+          "Lee Cronin's The Mummy": 0
+        }
+      },
+      "Timms": {
+        "total": 0,
+        "bomb": 0,
+        "movies": {
+          "The Odyssey": 0,
+          "Michael": 0,
+          "Scream 7": 0,
+          "Hoppers": 0,
+          "The Drama": 0,
+          "The Pout-Pout Fish": 0,
+          "Scarlet": 0
+        }
+      }
+    }
   }
 ]
