@@ -9,22 +9,18 @@
 <body class="bg-gray-900 text-white p-8">
     <h1 class="text-4xl font-bold mb-8 text-center">🎬 Movie Box Office League</h1>
     
-    <div id="player-rows" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        </div>
+    <div id="player-rows" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"></div>
 
     <div class="bg-gray-800 rounded-lg p-6">
-        <div class="flex border-b border-gray-700 mb-4" id="tabs">
+        <div class="flex flex-wrap border-b border-gray-700 mb-4" id="tabs">
             <button onclick="showTab('all')" class="px-4 py-2 hover:bg-gray-700">All</button>
-            <button onclick="showTab('Player 1')" class="px-4 py-2 hover:bg-gray-700">Player 1</button>
-            <button onclick="showTab('Player 2')" class="px-4 py-2 hover:bg-gray-700">Player 2</button>
-            <button onclick="showTab('Player 3')" class="px-4 py-2 hover:bg-gray-700">Player 3</button>
         </div>
         <table class="w-full text-left">
             <thead>
                 <tr class="text-gray-400">
                     <th class="p-2">Movie</th>
                     <th class="p-2">Box Office</th>
-                    <th class="p-2">Player</th>
+                    <th class="p-2">Owner</th>
                 </tr>
             </thead>
             <tbody id="movie-table"></tbody>
@@ -33,44 +29,42 @@
 
     <script>
         async function loadData() {
-    const response = await fetch('data.json');
-    const history = await response.json();
-    const latest = history[history.length - 1];
-    
-    // Dynamically get names from the JSON instead of hardcoding "Player 1"
-    const players = Object.keys(latest.players); 
+            const response = await fetch('data.json');
+            const history = await response.json();
+            const latest = history[history.length - 1];
+            const playerNames = Object.keys(latest.players);
 
-    const container = document.getElementById('player-rows');
-    container.innerHTML = ''; // Clear previous content
-            players.forEach(p => {
-                const pData = latest.players[p];
-                const trend = history.map(h => h.players[p].total);
+            // 1. Build Player Cards
+            const container = document.getElementById('player-rows');
+            const tabContainer = document.getElementById('tabs');
+            container.innerHTML = '';
+            
+            playerNames.forEach(name => {
+                const pData = latest.players[name];
+                const trend = history.map(h => h.players[name]?.total || 0);
                 const isPositive = trend.length > 1 ? trend[trend.length-1] >= trend[trend.length-2] : true;
 
+                // Add card
                 container.innerHTML += `
                     <div class="bg-gray-800 p-4 rounded-xl border-t-4 ${isPositive ? 'border-green-500' : 'border-red-500'}">
-                        <h2 class="text-xl font-bold">${p}</h2>
+                        <h2 class="text-xl font-bold">${name}</h2>
                         <p class="text-3xl font-mono">$${pData.total.toLocaleString()}</p>
-                        <p class="text-xs text-gray-400 mt-1">Bomb: $${pData.bomb.toLocaleString()}</p>
-                        <canvas id="chart-${p.replace(' ','')}" class="mt-4"></canvas>
+                        <p class="text-xs text-red-400 mt-1">Bomb Penalty: -$${pData.bomb.toLocaleString()}</p>
+                        <canvas id="chart-${name}" class="mt-4"></canvas>
                     </div>
                 `;
+
+                // Add tab button
+                tabContainer.innerHTML += `
+                    <button onclick="showTab('${name}')" class="px-4 py-2 hover:bg-gray-700">${name}</button>
+                `;
                 
-                setTimeout(() => renderChart(`chart-${p.replace(' ','')}`, trend, isPositive), 100);
+                setTimeout(() => renderChart(`chart-${name}`, trend, isPositive), 100);
             });
 
             window.fullData = latest;
             showTab('all');
         }
-
-        const tabContainer = document.getElementById('tabs');
-    tabContainer.innerHTML = `<button onclick="showTab('all')" class="px-4 py-2 hover:bg-gray-700">All</button>`;
-    players.forEach(p => {
-        tabContainer.innerHTML += `<button onclick="showTab('${p}')" class="px-4 py-2 hover:bg-gray-700">${p}</button>`;
-    });
-
-    window.fullData = latest;
-    showTab('all');
 
         function renderChart(id, data, isPositive) {
             new Chart(document.getElementById(id), {
@@ -81,26 +75,31 @@
                         data: data,
                         borderColor: isPositive ? '#22c55e' : '#ef4444',
                         fill: false,
-                        tension: 0.1
+                        tension: 0.1,
+                        pointRadius: 0
                     }]
                 },
-                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+                options: { 
+                    plugins: { legend: { display: false } }, 
+                    scales: { x: { display: false }, y: { display: false } } 
+                }
             });
         }
 
-        function showTab(player) {
+        function showTab(selectedPlayer) {
             const tbody = document.getElementById('movie-table');
             tbody.innerHTML = '';
             
-            Object.keys(window.fullData.players).forEach(p => {
-                if (player !== 'all' && p !== player) return;
-                const movies = window.fullData.players[p].movies;
+            Object.keys(window.fullData.players).forEach(name => {
+                if (selectedPlayer !== 'all' && name !== selectedPlayer) return;
+                
+                const movies = window.fullData.players[name].movies;
                 for (const [title, val] of Object.entries(movies)) {
                     tbody.innerHTML += `
-                        <tr class="border-b border-gray-700">
+                        <tr class="border-b border-gray-700 hover:bg-gray-750">
                             <td class="p-2">${title}</td>
                             <td class="p-2 font-mono">$${val.toLocaleString()}</td>
-                            <td class="p-2 text-sm text-gray-400">${p}</td>
+                            <td class="p-2 text-sm text-gray-400">${name}</td>
                         </tr>
                     `;
                 }
