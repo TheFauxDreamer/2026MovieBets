@@ -6,17 +6,17 @@ import os
 
 # CONFIGURATION: Add your movie picks here (must match the name on the website exactly)
 PLAYERS = {
-    "Player 1": {
-        "picks": ["Gladiator II", "Wicked", "Moana 2"],
-        "bomb": "Sonic the Hedgehog 3"
+    "Ethan": {
+        "picks": ["The Super Mario Galaxy Movie", "Cold Storage", "GOAT", "Iron Lung", "You, Me & Tuscany", "The Moment", "Shelter"],
+        "bomb": "Supergirl: Woman of Tomorrow"
     },
-    "Player 2": {
-        "picks": ["Mufasa: The Lion King", "Nosferatu", "A Complete Unknown"],
-        "bomb": "Better Man"
+    "Paul": {
+        "picks": ["Spider-Man: Brand New Day", "Project Hail Mary", "Ready or Not 2: Here I Come", "Wuthering Heights", "Reminders of Him", "The Undertone", "Lee Cronin's The Mummy"],
+        "bomb": "Resident Evil"
     },
-    "Player 3": {
-        "picks": ["Paddington in Peru", "Captain America: Brave New World", "Snow White"],
-        "bomb": "The Amateur"
+    "Timms": {
+        "picks": ["The Odyssey", "Michael", "Scream 7", "Hoppers", "The Drama", "The Pout-Pout Fish", "Scarlet"],
+        "bomb": "Street Fighter"
     }
 }
 
