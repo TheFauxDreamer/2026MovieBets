@@ -1,0 +1,27 @@
+name: Daily Box Office Update
+on:
+  schedule:
+    # 22:00 UTC is 6:00 AM GMT+8
+    - cron: '0 22 * * *' 
+  workflow_dispatch: # Allows you to run it manually anytime for testing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+      - name: Run Scraper
+        run: python scrape.py
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'BoxOfficeBot'
+          git config --global user.email 'bot@noreply.github.com'
+          git add data.json
+          git commit -m "Update daily stats" || exit 0
+          git push
